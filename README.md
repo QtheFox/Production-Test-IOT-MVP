@@ -22,7 +22,7 @@ docker push  quirin1/k8s-frontend:0.0.1
 Step 3:
 launch a cluster with 3 nodes and download kubeconfig file from cluster service (civo)
 
-Step 5:
+Step 4:
 export link to kubeconfig file as environment variable
 
 export KUBECONFIG="$PWD/civo-k8s-test-kubeconfig"
