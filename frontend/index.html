@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Production Test Database</title>
+</head>
+<body>
+  <h2>Production Test Database</h2>
+
+  <form id="myForm">
+    <input id="nameInput" placeholder="Name" required />
+    <input id="msgInput" placeholder="Message" required />
+    <button type="submit">Send</button>
+  </form>
+
+  <table border="1" style="margin-top: 16px;">
+    <thead>
+      <tr><th>Name</th><th>Message</th><th>Action</th></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById("myForm");
+    const nameInput = document.getElementById("nameInput");
+    const msgInput = document.getElementById("msgInput");
+    const tableBody = document.getElementById("tableBody");
+
+    async function deleteEntry(index) {
+      const res = await fetch(`/entries/${index}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        console.error("Failed to delete entry:", res.status);
+      }
+      await refreshTable();
+    }
+
+    async function refreshTable() {
+      const res = await fetch("/entries");
+      const rows = await res.json();
+
+      tableBody.innerHTML = "";
+      rows.forEach((row, index) => {
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.textContent = row.name;
+
+        const tdMsg = document.createElement("td");
+        tdMsg.textContent = row.message;
+
+        const tdAction = document.createElement("td");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", () => deleteEntry(index));
+        tdAction.appendChild(deleteBtn);
+
+        tr.append(tdName, tdMsg, tdAction);
+        tableBody.appendChild(tr);
+      });
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      await fetch("/entries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: nameInput.value,
+          message: msgInput.value,
+        }),
+      });
+
+      form.reset();
+      await refreshTable();
+    });
+
+    refreshTable();
+  </script>
+</body>
+</html>
