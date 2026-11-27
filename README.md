@@ -1,4 +1,4 @@
-This is a simple guestbook application to demonstrate
+This is a simple Production Test Server application to demonstrate
 the deployment of a backend and frontend service in a kubernetes 
 cluster.
 
@@ -32,6 +32,10 @@ Step 5:
 apply 
 
 kubectl apply -f guestbook-split.yaml
+
+or for redeployment:
+
+kubectl rollout restart deployments -n default
 
 Step 6:
 check if cluster services are running
