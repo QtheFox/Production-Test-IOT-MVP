@@ -28,27 +28,28 @@ Step 3: Launch the Kubernetes Cluster
 
 Step 4: Export KUBECONFIG
 Set the path to your downloaded kubeconfig file as an environment variable:
-
+```bash
 export KUBECONFIG="$PWD/civo-k8s-test-kubeconfig"
-
+```
 
 Step 5: Deploy (or Redeploy) the Application
 Apply the Kubernetes manifest to deploy the services:
-
+```bash
 kubectl apply -f guestbook-split.yaml
-
+```
 For redeployment after updating images:
-
+```bash
 kubectl rollout restart deployments -n default
-
+```
 
 Step 6: Check If Cluster Services Are Running
 Verify that your nodes, services, and pods are active and healthy:
 
+```bash
 kubectl get nodes -o wide
 kubectl get svc -A
 kubectl get pods
-
+```
 
 Step 7: Configure Domain DNS
 1. Get the Public IP from your cluster in Civo.
