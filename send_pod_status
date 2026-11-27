@@ -1,0 +1,35 @@
+import subprocess
+import requests
+
+url = "https://quiquak.de/entries"
+headers = {"Host": "quiquak.de"}
+
+
+def get_pods_status() -> str:
+    result = subprocess.run(
+        ["kubectl", "get", "pods"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
+try:
+    pods_output = get_pods_status()
+except FileNotFoundError:
+    pods_output = "Error: kubectl not found in PATH"
+except subprocess.CalledProcessError as exc:
+    pods_output = f"kubectl failed (exit {exc.returncode}): {exc.stderr.strip()}"
+except subprocess.TimeoutExpired:
+    pods_output = "kubectl timed out after 10s"
+
+payload = {
+    "name": "Kubernetes Pod Status",
+    "message": pods_output,
+}
+
+response = requests.post(url, json=payload, headers=headers, timeout=10)
+print("Status Code:", response.status_code)
+print("Antwort:", response.text)

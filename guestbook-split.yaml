@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: quirin1/k8s-frontend:0.0.3
+          image: quirin1/k8s-frontend:0.0.6
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -110,3 +110,13 @@ spec:
       - http01:
           ingress:
             ingressClassName: traefik
+
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-to-https
+  namespace: default
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
